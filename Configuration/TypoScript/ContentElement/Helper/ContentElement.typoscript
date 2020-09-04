@@ -59,6 +59,9 @@ lib.contentElement {
         header {
             defaultHeaderType = {$plugin.bootstrap_package_contentelements.header.defaultHeaderType}
             class = {$plugin.bootstrap_package_contentelements.header.class}
+            date {
+                format = {$plugin.bootstrap_package_contentelements.header.date.format}
+            }
         }
         subheader {
             class = {$plugin.bootstrap_package_contentelements.subheader.class}
@@ -69,6 +72,17 @@ lib.contentElement {
             image {
                 maxHeight = {$plugin.bootstrap_package_contentelements.lightbox.image.maxHeight}
                 maxWidth = {$plugin.bootstrap_package_contentelements.lightbox.image.maxWidth}
+            }
+        }
+        media {
+            additionalConfig {
+                autoplay = {$plugin.bootstrap_package_contentelements.media.additionalConfig.autoplay}
+                controls = {$plugin.bootstrap_package_contentelements.media.additionalConfig.controls}
+                loop = {$plugin.bootstrap_package_contentelements.media.additionalConfig.loop}
+                enablejsapi = {$plugin.bootstrap_package_contentelements.media.additionalConfig.enablejsapi}
+                showinfo = {$plugin.bootstrap_package_contentelements.media.additionalConfig.showinfo}
+                relatedVideos = {$plugin.bootstrap_package_contentelements.media.additionalConfig.relatedVideos}
+                modestbranding = {$plugin.bootstrap_package_contentelements.media.additionalConfig.modestbranding}
             }
         }
         gallery {
@@ -569,19 +583,19 @@ lib.contentElement {
             icon {
                 default {
                     height = {$plugin.bootstrap_package_contentelements.texticon.icon.default.height}
-                    width = {$plugin.bootstrap_package_contentelements.texticon.icon.default.height}
+                    width = {$plugin.bootstrap_package_contentelements.texticon.icon.default.width}
                 }
                 medium {
                     height = {$plugin.bootstrap_package_contentelements.texticon.icon.medium.height}
-                    width = {$plugin.bootstrap_package_contentelements.texticon.icon.medium.height}
+                    width = {$plugin.bootstrap_package_contentelements.texticon.icon.medium.width}
                 }
                 large {
                     height = {$plugin.bootstrap_package_contentelements.texticon.icon.large.height}
-                    width = {$plugin.bootstrap_package_contentelements.texticon.icon.large.height}
+                    width = {$plugin.bootstrap_package_contentelements.texticon.icon.large.width}
                 }
                 awesome {
                     height = {$plugin.bootstrap_package_contentelements.texticon.icon.awesome.height}
-                    width = {$plugin.bootstrap_package_contentelements.texticon.icon.awesome.height}
+                    width = {$plugin.bootstrap_package_contentelements.texticon.icon.awesome.width}
                 }
             }
         }

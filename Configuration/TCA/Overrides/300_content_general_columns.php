@@ -132,7 +132,6 @@ $GLOBALS['TCA']['tt_content']['columns']['tx_bootstrappackage_carousel_item'] = 
         ],
         'behaviour' => [
             'mode' => 'select',
-            'localizeChildrenAtParentLocalization' => true,
         ]
     ]
 ];
@@ -144,10 +143,59 @@ $GLOBALS['TCA']['tt_content']['columns']['file_folder'] = [
         'internal_type' => 'folder',
     ]
 ];
+$GLOBALS['TCA']['tt_content']['columns']['aspect_ratio'] = [
+    'label' => 'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:field.aspect_ratio',
+    'config' => [
+        'type' => 'select',
+        'renderType' => 'selectSingle',
+        'items' => [
+            ['LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:ratio.4_3', (string) (4/3)],
+            ['LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:ratio.16_9', (string) (16/9)],
+            ['LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:ratio.1_1', (string) (1/1)],
+        ]
+    ],
+    'l10n_mode' => 'exclude',
+];
+$GLOBALS['TCA']['tt_content']['columns']['items_per_page'] = [
+    'label' => 'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:field.items_per_page',
+    'config' => [
+        'type' => 'input',
+        'size' => 2,
+        'eval' => 'trim,int',
+        'range' => [
+            'lower' => 1,
+            'upper' => 50,
+        ],
+        'default' => 10,
+    ],
+    'l10n_mode' => 'exclude',
+];
 
 /***************
  * Adjust default fields
  */
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
+    'tt_content',
+    'imageorient',
+    [
+        'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:field.imageorient.125',
+        (string) 125,
+        'content-bootstrappackage-beside-text-img-centered-right'
+    ],
+    (string) 125,
+    'after'
+);
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
+    'tt_content',
+    'imageorient',
+    [
+        'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:field.imageorient.126',
+        (string) 126,
+        'content-bootstrappackage-beside-text-img-centered-left'
+    ],
+    (string) 126,
+    'after'
+);
 $GLOBALS['TCA']['tt_content']['columns']['frame_class']['onChange'] = 'reload';
 
 /***************

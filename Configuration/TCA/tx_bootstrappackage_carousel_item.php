@@ -42,6 +42,7 @@ return [
             'header' => 'content-bootstrappackage-carousel-item-header',
             'call_to_action' => 'content-bootstrappackage-carousel-item-calltoaction',
             'image' => 'content-bootstrappackage-carousel-item-image',
+            'text' => 'content-bootstrappackage-carousel-item-text',
             'text_and_image' => 'content-bootstrappackage-carousel-item-textandimage',
             'background_image' => 'content-bootstrappackage-carousel-item-backgroundimage',
             'html' => 'content-bootstrappackage-carousel-item-html'
@@ -83,6 +84,23 @@ return [
                 nav_title,
                 text_color,
                 link,
+                --div--;LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:tabs.background,
+                background_color,
+                background_image,
+                background_image_options,
+                --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,
+                --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.visibility;visibility,
+                --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access;access,
+                --palette--;;hiddenLanguagePalette,
+            '
+        ],
+        'text' => [
+            'showitem' => '
+                --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.general;general,
+                --palette--;LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:carousel_item.header;header,
+                nav_title,
+                bodytext,
+                text_color,
                 --div--;LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:tabs.background,
                 background_color,
                 background_image,
@@ -176,7 +194,14 @@ return [
                 --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.visibility;visibility,
                 --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access;access,
                 --palette--;;hiddenLanguagePalette,
-            '
+            ',
+            'columnsOverrides' => [
+                'bodytext' => [
+                    'config' => [
+                        'enableRichtext' => false
+                    ]
+                ]
+            ]
         ],
     ],
     'palettes' => [
@@ -198,6 +223,8 @@ return [
                 subheader,
                 subheader_layout,
                 subheader_class,
+                --linebreak--,
+                header_position,
             '
         ],
         'general' => [
@@ -225,7 +252,7 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'foreign_table' => 'tt_content',
-                'foreign_table_where' => 'AND tt_content.pid=###CURRENT_PID### AND tt_content.CType IN ("carousel","carousel_small","carousel_fullscreen")',
+                'foreign_table_where' => 'AND tt_content.pid=###CURRENT_PID### AND tt_content.{#CType} IN (\'carousel\',\'carousel_small\',\'carousel_fullscreen\')',
                 'maxitems' => 1,
                 'default' => 0,
             ],
@@ -240,6 +267,11 @@ return [
                         'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:carousel_item.item_type.header',
                         'header',
                         'content-bootstrappackage-carousel-item-header'
+                    ],
+                    [
+                        'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:carousel_item.item_type.text',
+                        'text',
+                        'content-bootstrappackage-carousel-item-text'
                     ],
                     [
                         'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:carousel_item.item_type.calltoaction',
@@ -412,6 +444,33 @@ return [
             ],
             'l10n_mode' => 'exclude',
         ],
+        'header_position' => [
+            'label' => 'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:carousel_item.header_position',
+            'exclude' => true,
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'items' => [
+                    [
+                        'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:carousel_item.header_position.default',
+                        ''
+                    ],
+                    [
+                        'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:carousel_item.header_position.center',
+                        'center'
+                    ],
+                    [
+                        'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:carousel_item.header_position.right',
+                        'right'
+                    ],
+                    [
+                        'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:carousel_item.header_position.left',
+                        'left'
+                    ]
+                ],
+                'default' => ''
+            ]
+        ],
         'header_class' => [
             'exclude' => true,
             'label' => 'LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:carousel_item.header_class',
@@ -497,6 +556,7 @@ return [
                 'cols' => '80',
                 'rows' => '5',
                 'softref' => 'typolink_tag,images,email[subst],url',
+                'enableRichtext' => true
             ],
         ],
         'button_text' => [

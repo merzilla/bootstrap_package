@@ -16,10 +16,14 @@
 @card-columns-gap:                  1.25em;
 @card-columns-margin:               @card-spacer-y;
 
+@card-title-size:  1.35em;
+@card-subtitle-size: 1.25em;
+@card-link-color: @link-color;
+@card-link-hover-color: @link-hover-color;
 
 // Component
 .card {
-    color: inherit;
+    color: contrast(@card-bg, black, white, 43%);
     position: relative;
     display: flex;
     flex-direction: column;
@@ -62,13 +66,12 @@
 }
 .card-link {
     &:hover {
-      text-decoration: none;
+        text-decoration: none;
     }
     + .card-link {
-      margin-left: @card-spacer-x;
+        margin-left: @card-spacer-x;
     }
 }
-
 
 //
 // Optional textual caps
@@ -95,7 +98,6 @@
         border-radius: 0 0 @card-inner-border-radius @card-inner-border-radius;
     }
 }
-
 
 //
 // Header navs
@@ -134,7 +136,6 @@
     .border-bottom-radius(@card-inner-border-radius);
 }
 
-
 // Card deck
 .card-deck {
     display: flex;
@@ -158,7 +159,6 @@
     }
 }
 
-
 //
 // Card groups
 //
@@ -170,7 +170,6 @@
     > .card {
         margin-bottom: @card-group-margin;
     }
-
     @media (min-width: @screen-sm) {
         flex-flow: row wrap;
         // The child selector allows nested `.card` within `.card-group`
@@ -180,13 +179,12 @@
             flex: 1 0 0%;
             margin-bottom: 0;
             + .card {
-            margin-left: 0;
-            border-left: 0;
+                margin-left: 0;
+                border-left: 0;
             }
         }
     }
 }
-
 
 //
 // Columns
@@ -207,10 +205,18 @@
     }
 }
 
-
 //
 // Card
 //
+.card {
+    a:not(.btn) {
+        color: @card-link-color;
+        &:hover,
+        &:focus {
+            color: @card-link-hover-color;
+        }
+    }
+}
 .card-img-top {
     overflow: hidden;
     picture,
@@ -228,7 +234,6 @@
     }
 }
 
-
 //
 // Card Deck Menu
 //
@@ -240,17 +245,22 @@
         height: 100%;
     }
     .card-icon {
-        margin-bottom: 0.5rem;
+        margin-bottom: .5em;
     }
     .card-title {
-        font-size: 1.35rem;
+        font-size: @card-title-size;
     }
     .card-subtitle {
-        font-size: 1.25rem;
+        font-size: @card-subtitle-size;
         margin-bottom: @card-spacer-y;
     }
-    .card-link {
-        color: @link-color;
+    .card-footer {
+        border-top: 0;
+        padding: @card-spacer-x;
+        background-color: transparent;
+    }
+    .card-body + .card-footer {
+        padding-top: 0;
     }
 }
 .card-menu-item {
@@ -267,21 +277,21 @@
     justify-content: flex-end;
 }
 .card-menu-columns-2 {
-    .card-menu-item  {
+    .card-menu-item {
         @media (min-width: @screen-sm) {
             width: calc(~'100% / 2');
         }
     }
 }
 .card-menu-columns-3 {
-    .card-menu-item  {
+    .card-menu-item {
         @media (min-width: @screen-sm) {
             width: calc(~'100% / 3');
         }
     }
 }
 .card-menu-columns-4 {
-    .card-menu-item  {
+    .card-menu-item {
         @media (min-width: @screen-sm) {
             width: calc(~'100% / 2');
         }
@@ -290,7 +300,6 @@
         }
     }
 }
-
 
 //
 // Card Group Element
@@ -307,16 +316,19 @@
         height: 100%;
     }
     .card-title {
-        font-size: 1.35rem;
+        font-size: @card-title-size;
     }
     .card-subtitle {
-        font-size: 1.25rem;
+        font-size: @card-subtitle-size;
         margin-bottom: @card-spacer-y;
     }
     .card-footer {
         border-top: 0;
         padding: @card-spacer-x;
         background-color: transparent;
+    }
+    .card-body + .card-footer {
+        padding-top: 0;
     }
 }
 .card-group-element-align-left {
@@ -353,7 +365,6 @@
     }
 }
 
-
 //
 // Card Panel
 //
@@ -367,7 +378,6 @@
         }
     }
 }
-
 
 //
 // Variants

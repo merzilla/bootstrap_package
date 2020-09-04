@@ -112,7 +112,7 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'foreign_table' => 'tt_content',
-                'foreign_table_where' => 'AND tt_content.pid=###CURRENT_PID### AND tt_content.CType="card_group"',
+                'foreign_table_where' => 'AND tt_content.pid=###CURRENT_PID### AND tt_content.{#CType}=\'card_group\'',
                 'maxitems' => 1,
                 'default' => 0,
             ],
@@ -278,8 +278,7 @@ return [
                 'cols' => '80',
                 'rows' => '15',
                 'softref' => 'typolink_tag,images,email[subst],url',
-                'enableRichtext' => true,
-                'richtextConfiguration' => 'default'
+                'enableRichtext' => true
             ],
         ],
         'link' => [

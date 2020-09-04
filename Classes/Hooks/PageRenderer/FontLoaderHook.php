@@ -13,6 +13,7 @@ use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\TypoScript\TemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
+use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
 
 /**
  * FontLoaderHook
@@ -20,12 +21,28 @@ use TYPO3\CMS\Core\Utility\PathUtility;
 class FontLoaderHook
 {
     /**
+     * @var FilePathSanitizer
+     */
+    protected $filePathSanitizer;
+
+    /**
      * @var array
      */
     protected $includeMapping = [
         'includeCSSLibs' => 'cssLibs',
         'includeCSS' => 'cssFiles'
     ];
+
+    /**
+     * @param FilePathSanitizer|null $filePathSanitizer
+     */
+    public function __construct(FilePathSanitizer $filePathSanitizer = null)
+    {
+        if ($filePathSanitizer === null) {
+            $filePathSanitizer = GeneralUtility::makeInstance(FilePathSanitizer::class);
+        }
+        $this->filePathSanitizer = $filePathSanitizer;
+    }
 
     /**
      * @param array $params
@@ -61,8 +78,14 @@ class FontLoaderHook
             $config['custom']['urls'] = $urls;
             $config['custom']['families'] = $families;
             $config['timeout'] = 1000;
-            $params['headerData'][] = '<style>' . $this->generateCss() . '</style>';
-            $params['headerData'][] = '<script>' . $this->generateJavaScript($config) . '</script>';
+            $generatedCss = $this->generateCss();
+            if (!empty($generatedCss)) {
+                $params['headerData'][] = '<style>' . $generatedCss . '</style>';
+            }
+            $generatedJavaScript = $this->generateJavaScript($config);
+            if (!empty($generatedJavaScript)) {
+                $params['headerData'][] = '<script>' . $generatedJavaScript . '</script>';
+            }
         }
     }
 
@@ -80,7 +103,7 @@ class FontLoaderHook
                 continue;
             }
             if ($cssIncludes[$key . '.']['fontLoader.']['enabled']) {
-                $filename = $this->getTemplateService()->getFileName($filename);
+                $filename = $this->filePathSanitizer->sanitize($filename);
                 $url = str_replace(' ', '+', $filename);
                 $url = $this->getUriForFileName($url);
                 $webFonts[$section . '_' . $key] = [
@@ -126,7 +149,7 @@ class FontLoaderHook
             $bodyStyles[] = 'background-repeat:no-repeat;';
             $bodyStyles[] = 'content:\'\';';
             $bodyStyles[] = 'position:fixed;';
-            $bodyStyles[] = 'top:0;';
+            $bodyStyles[] = 'top:-100%;';
             $bodyStyles[] = 'left:0;';
             $bodyStyles[] = 'z-index:10000;';
             $bodyStyles[] = 'opacity:0;';
@@ -152,11 +175,13 @@ class FontLoaderHook
             $loadingStyles = [];
             $bodyStyles[] = 'user-select:initial;';
             $bodyStyles[] = 'pointer-events:initial;';
-            $loadingStyles[] = 'opacity: 1!important;';
+            $loadingStyles[] = 'top:0;';
+            $loadingStyles[] = 'opacity:1!important;';
 
             $duration = (float) $this->getTypoScriptConstant('page.preloader.fadeDuration');
             $transition = 'opacity ' . $duration . 's ease-out';
             $activeStyles = [];
+            $activeStyles[] = 'top: 0;';
             $activeStyles[] = 'opacity:0!important;';
             $activeStyles[] = 'user-select:none;';
             $activeStyles[] = 'pointer-events:none;';

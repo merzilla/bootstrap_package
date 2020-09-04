@@ -91,8 +91,8 @@
     }
 }
 .frame-small {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
     @include media-breakpoint-up('sm') {
         padding-top: 1rem;
         padding-bottom: 1rem;
@@ -103,7 +103,8 @@
 // Background
 //
 .container {
-    .frame-has-backgroundimage {
+    .frame-has-backgroundimage,
+    %frame-has-backgroundimage {
         @each $breakpoint in map-keys($frame-inner-spacing-scaling) {
             @include media-breakpoint-up($breakpoint) {
                 $scaling: map-get($frame-inner-spacing-scaling, $breakpoint);
@@ -122,7 +123,7 @@
     }
 }
 @mixin make-frame-spacing($name) {
-    .frame-background-#{$name}.frame-space-after-none:not(.frame-ruler-after) + .frame-background-#{$name}.frame-space-before-none:not(.frame-ruler-before):not(.frame-has-backgroundimage) {
+    .frame-background-#{$name}.frame-space-after-none:not(.frame-ruler-after):not(.frame-has-backgroundimage) + .frame-background-#{$name}.frame-space-before-none:not(.frame-ruler-before):not(.frame-has-backgroundimage) {
         @extend .frame-collapsible;
     }
 }
@@ -133,13 +134,12 @@
     $link-color: map-get($settings, 'link-color');
     $link-hover-color: map-get($settings, 'link-hover-color');
     .frame-background-#{$name} {
-        @extend .frame-has-backgroundimage;
+        @extend %frame-has-backgroundimage;
         color: $color;
         background-color: $background;
         a:not(.btn) {
             color: $link-color;
-            &:focus,
-            &:hover {
+            @include hover {
                 color: $link-hover-color;
             }
         }
@@ -167,10 +167,13 @@
     background-size: cover;
 }
 .frame-backgroundimage-fade {
-    opacity: 0.125;
+    opacity: .125;
 }
 .frame-backgroundimage-parallax {
     background-attachment: fixed;
+    @media (hover: none) {
+        background-attachment: initial;
+    }
     background-repeat: no-repeat;
 }
 .frame-backgroundimage-blur {

@@ -32,12 +32,13 @@
                 max-height: calc(100vh - #{map-get($navbar-heights, $breakpoint)});
             }
         }
-        &.show {
-            overflow-y: auto;
+        @media (max-width: ($grid-float-breakpoint - 1)) {
+            &.show {
+                overflow-y: auto;
+            }
         }
     }
 }
-
 
 //
 // Carousel Corrections
@@ -113,8 +114,6 @@
     }
 }
 
-
-
 //
 // Brand
 //
@@ -134,7 +133,7 @@
         img {
             position: relative;
             top: 50%;
-            transform: translate(0,-50%);
+            transform: translate(0, -50%);
             width: auto;
             max-height: map-get($navbar-heights, xs) - 30;
             @media (min-width: $grid-float-breakpoint) {
@@ -150,7 +149,6 @@
     }
 }
 
-
 //
 // Breakpoint
 // Bootstrap 4 only allows breakpoints to be fixed at viewports this removes
@@ -162,7 +160,7 @@
     > .container-fluid > .navbar-collapse > .navbar-nav {
         padding-bottom: 1em;
         &:first-child {
-            padding-top: 0.5em;
+            padding-top: .5em;
         }
         &:last-child {
             padding-bottom: 1.25em;
@@ -211,8 +209,8 @@
         > .navbar-nav,
         > .container > .collapse > .navbar-nav,
         > .container-fluid > .collapse > .navbar-nav {
-            padding-top: 0!important;
-            padding-bottom: 0!important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
             flex-direction: row;
             &:first-child {
                 margin-left: -$navbar-nav-link-padding-x;
@@ -240,7 +238,6 @@
     }
 }
 
-
 //
 // Dropdown
 //
@@ -248,7 +245,7 @@
     .dropdown-menu {
         margin: 0;
     }
-    .dropdown-toggle::after {
+    .dropdown-toggle:after {
         display: none;
         margin-left: auto;
         vertical-align: middle;
@@ -269,15 +266,15 @@
             margin: 0;
         }
         & + .dropdown-text {
-            margin-left: 0.5em;
+            margin-left: .5em;
         }
     }
     @media (max-width: ($grid-float-breakpoint - 1)) {
-        .dropdown-toggle::after {
+        .dropdown-toggle:after {
             display: inline-block;
         }
         .dropdown-menu {
-            position: relative;
+            position: static;
             margin-left: -($grid-gutter-width / 2);
             margin-right: -($grid-gutter-width / 2);
             border: none;
@@ -293,12 +290,11 @@
     }
 }
 
-
 //
 // Mainnavigation
 //
 .navbar-mainnavigation {
-    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, .15);
     padding: 0;
     .navbar-nav:last-child {
         margin-left: auto;
@@ -307,7 +303,6 @@
         width: 22px;
     }
 }
-
 
 //
 // Item
@@ -325,43 +320,43 @@
     }
     .nav-link-icon {
         & + .nav-link-text {
-            margin-left: 0.5em;
+            margin-left: .5em;
         }
         svg,
         img {
-            vertical-align: sub;
+            display: block;
+            margin: 0;
         }
     }
 }
-
 
 //
 // Status
 //
 .navbar-mainnavigation {
     .navbar-nav > li {
-        > .nav-link::before {
+        > .nav-link:before {
             content: '';
             position: absolute;
-            top: 0px;
+            top: 0;
             left: 0;
             width: 4px;
             height: 100%;
             background: $primary;
             opacity: 0;
-            transition: opacity 0.25s ease-in-out;
+            transition: opacity .25s ease-in-out;
         }
-        > .nav-link:focus::before,
-        > .nav-link:hover::before,
-        &:hover > .nav-link::before {
-                opacity: .25;
+        > .nav-link:focus:before,
+        > .nav-link:hover:before,
+        &:hover > .nav-link:before {
+            opacity: .25;
         }
-        &.show > .nav-link::before,
-        &.active > .nav-link::before {
+        &.show > .nav-link:before,
+        &.active > .nav-link:before {
             opacity: .5;
         }
         @media (min-width: $grid-float-breakpoint) {
-            > .nav-link::before {
+            > .nav-link:before {
                 top: auto;
                 left: $navbar-nav-link-padding-x;
                 right: $navbar-nav-link-padding-x;
@@ -372,7 +367,6 @@
         }
     }
 }
-
 
 //
 // Toggler
@@ -394,12 +388,12 @@
     position: absolute;
     left: 0;
     top: 0;
-    background-image: none!important;
+    background-image: none !important;
     display: inline-block;
     width: 22px;
     height: 2px;
     background-color: currentColor;
-    transition: all 0.3s ease-in;
+    transition: all .3s ease-in;
 }
 .navbar-toggler-icon {
     top: 50%;
@@ -408,18 +402,18 @@
     transform: translate(-50%, -50%);
 }
 .navbar-toggler-icon:before {
-    transition-delay: 0.1s;
+    transition-delay: .1s;
     transform: rotate(-45deg);
-    top: 0px;
+    top: 0;
 }
 .navbar-toggler-icon:after {
-    transition-delay: 0.1s;
+    transition-delay: .1s;
     transform: rotate(45deg);
-    top: 0px;
+    top: 0;
 }
 .navbar-toggler.collapsed {
     .navbar-toggler-icon {
-        transition-delay: 0.2s;
+        transition-delay: .2s;
         height: 2px;
     }
     .navbar-toggler-icon:before {
@@ -434,7 +428,6 @@
     }
 }
 
-
 //
 // Navigation Style
 //
@@ -446,7 +439,6 @@
     @extend .navbar-dark;
     @extend .bg-dark;
 }
-
 
 //
 // Transision
@@ -469,7 +461,7 @@
 }
 @media (min-width: $grid-float-breakpoint) {
     .navbar {
-        transition: all 0.27s cubic-bezier(0, 0, 0.58, 1) 0s;
+        transition: all .27s cubic-bezier(0, 0, .58, 1) 0s;
     }
     .navbar-default-transition:not(.navbar-transition),
     .navbar-inverse-transition:not(.navbar-transition) {
@@ -493,13 +485,12 @@
     }
 }
 
-
 //
 // Navbar Bottom
 //
 .navbar-mainnavigation {
     &.navbar-bottom {
-        box-shadow: 0 -1px 0 0 rgba(0, 0, 0, 0.15);
+        box-shadow: 0 -1px 0 0 rgba(0, 0, 0, .15);
         .dropdown-menu {
             top: auto;
             bottom: 100%;

@@ -10,6 +10,7 @@
 namespace BK2K\BootstrapPackage\Service;
 
 use BK2K\BootstrapPackage\Parser\ParserInterface;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -38,8 +39,8 @@ class CompileService
         $configuration = ($GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_bootstrappackage.']['settings.'] ?: []);
 
         // Ensure cache directory exists
-        if (!file_exists($this->tempDirectory)) {
-            GeneralUtility::mkdir_deep($this->tempDirectory);
+        if (!file_exists(Environment::getPublicPath() . '/' . $this->tempDirectory)) {
+            GeneralUtility::mkdir_deep(Environment::getPublicPath() . '/' . $this->tempDirectory);
         }
 
         // Settings
@@ -129,6 +130,6 @@ class CompileService
      */
     protected function clearCompilerCaches()
     {
-        GeneralUtility::rmdir(PATH_site . $this->tempDirectory, true);
+        GeneralUtility::rmdir(Environment::getPublicPath() . '/' . $this->tempDirectory, true);
     }
 }

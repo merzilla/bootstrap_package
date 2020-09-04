@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 /*
  * This file is part of the package bk2k/bootstrap-package.
@@ -12,28 +13,54 @@ namespace BK2K\BootstrapPackage\Updates;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
+use TYPO3\CMS\Install\Updates\RepeatableInterface;
+use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * CarouselContentElementUpdate
  */
-class CarouselContentElementUpdate extends \TYPO3\CMS\Install\Updates\AbstractUpdate
+class CarouselContentElementUpdate implements UpgradeWizardInterface, RepeatableInterface
 {
     /**
-     * @var string
+     * @return string
      */
-    protected $title = '[BootstrapPackage] Migrate carousel content element';
+    public function getIdentifier(): string
+    {
+        return self::class;
+    }
 
     /**
-     * Checks if an update is needed
-     *
-     * @param string &$description The description for the update
-     * @return bool Whether an update is needed (TRUE) or not (FALSE)
+     * @return string
      */
-    public function checkForUpdate(&$description)
+    public function getTitle(): string
     {
-        if ($this->isWizardDone()) {
-            return false;
-        }
+        return '[Bootstrap Package] Migrate carousel content element';
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return '';
+    }
+
+    /**
+     * @return array
+     */
+    public function getPrerequisites(): array
+    {
+        return [
+            DatabaseUpdatedPrerequisite::class
+        ];
+    }
+
+    /**
+     * @return bool
+     */
+    public function updateNecessary(): bool
+    {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
         $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
         $elementCount = $queryBuilder->count('uid')
@@ -46,13 +73,9 @@ class CarouselContentElementUpdate extends \TYPO3\CMS\Install\Updates\AbstractUp
     }
 
     /**
-     * Performs the database update
-     *
-     * @param array &$databaseQueries Queries done in this update
-     * @param string &$customMessage Custom message
      * @return bool
      */
-    public function performUpdate(array &$databaseQueries, &$customMessage)
+    public function executeUpdate(): bool
     {
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tt_content');
         $queryBuilder = $connection->createQueryBuilder();
@@ -74,16 +97,12 @@ class CarouselContentElementUpdate extends \TYPO3\CMS\Install\Updates\AbstractUp
                 )
                 ->set('layout', 0, false)
                 ->set('CType', $this->mapValues($record['layout']));
-            $databaseQueries[] = $queryBuilder->getSQL();
             $queryBuilder->execute();
         }
-        $this->markWizardAsDone();
         return true;
     }
 
     /**
-     * Map the old to the new values
-     *
      * @param int $layout
      * @return string
      */

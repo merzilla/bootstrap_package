@@ -47,23 +47,6 @@ class InstallService
                 $this->createConfigurationFile('.htaccess');
             } elseif (strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') === 0) {
                 $this->createConfigurationFile('web.config');
-            } else {
-                /**
-                 * Add Flashmessage that the system is not running on a supported webserver and the url rewritings must be handled manually
-                 */
-                $flashMessage = GeneralUtility::makeInstance(
-                    FlashMessage::class,
-                    'The Bootstrap Package suggests to use RealUrl to generate SEO friendly URLs, please take care of '
-                    . 'the URLs rewriting settings for your environment yourself. You can also deactivate RealUrl by '
-                    . 'changing your TypoScript setup to "config.tx_realurl_enable = 0". You also need to take care of '
-                    . 'securing configuration files. Example Configurations for Apache and Microsoft IIS can be found '
-                    . 'in "typo3conf/ext/bootstrap_package/Configuration/Server/".',
-                    'TYPO3 is not running on an Apache or Microsoft-IIS Webserver',
-                    FlashMessage::WARNING,
-                    true
-                );
-                $this->addFlashMessage($flashMessage);
-                return;
             }
         }
     }
@@ -83,10 +66,11 @@ class InstallService
                 'There is already an ' . $filename . ' configuration file in the root directory, '
                 . 'please make sure that configuration files are protected and the url rewritings are set properly. '
                 . 'An example configuration is located at: "typo3conf/ext/bootstrap_package/Configuration/Server/_' . $filename . '"',
-                'Webserver coniguration file "' . $filename . '" already exists',
+                'Webserver configuration file "' . $filename . '" already exists',
                 FlashMessage::NOTICE,
                 true
             );
+            /** @extensionScannerIgnoreLine */
             $this->addFlashMessage($flashMessage);
             return;
         }
@@ -98,10 +82,11 @@ class InstallService
             $flashMessage = GeneralUtility::makeInstance(
                 FlashMessage::class,
                 'For securing configuration files and optimization purposes an example ' . $filename . ' file was placed in your root directory.',
-                'Webserver coniguration file "' . $filename . '" was placed in the root directory.',
+                'Webserver configuration file "' . $filename . '" was placed in the root directory.',
                 FlashMessage::OK,
                 true
             );
+            /** @extensionScannerIgnoreLine */
             $this->addFlashMessage($flashMessage);
         }
     }

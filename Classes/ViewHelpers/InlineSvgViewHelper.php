@@ -13,8 +13,8 @@ use TYPO3\CMS\Core\Resource\Exception\ResourceDoesNotExistException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Service\ImageService;
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
@@ -39,6 +39,7 @@ class InlineSvgViewHelper extends AbstractViewHelper
         parent::initializeArguments();
         $this->registerArgument('image', 'object', 'a FAL object');
         $this->registerArgument('src', 'string', 'a path to a file');
+        $this->registerArgument('class', 'string', 'Css class for the svg');
         $this->registerArgument('width', 'string', 'Width of the svg.', false);
         $this->registerArgument('height', 'string', 'Height of the svg.', false);
     }
@@ -55,43 +56,37 @@ class InlineSvgViewHelper extends AbstractViewHelper
         \Closure $renderChildrenClosure,
         RenderingContextInterface $renderingContext
     ) {
-        $src = $arguments['src'];
+        $src = (string)$arguments['src'];
         $image = $arguments['image'];
 
-        if (($src === null && $image === null) || ($src !== null && $image !== null)) {
+        if (($src === '' && $image === null) || ($src !== '' && $image !== null)) {
             throw new \Exception('You must either specify a string src or a File object.', 1530601100);
         }
 
         try {
             $imageService = self::getImageService();
-            $image = $imageService->getImage($src, $image, 0);
+            $image = $imageService->getImage($src, $image, false);
             if ($image->getProperty('extension') !== 'svg') {
                 return '';
             }
 
             $svgContent = $image->getContents();
-            $svgContent = preg_replace('/<script[\s\S]*?>[\s\S]*?<\/script>/i', '', $svgContent);
+            $svgContent = trim(preg_replace('/<script[\s\S]*?>[\s\S]*?<\/script>/i', '', $svgContent));
+
+            // Exit if file does not contain content
+            if (empty($svgContent)) {
+                return '';
+            }
 
             // Disables the functionality to allow external entities to be loaded when parsing the XML, must be kept
             $previousValueOfEntityLoader = libxml_disable_entity_loader(true);
             $svgElement = simplexml_load_string($svgContent);
             libxml_disable_entity_loader($previousValueOfEntityLoader);
 
-            // Override width and height
-            if ($arguments['width']) {
-                if (isset($svgElement->attributes()->width)) {
-                    $svgElement->attributes()->width = (int)$arguments['width'];
-                } else {
-                    $svgElement->addAttribute('width', (int)$arguments['width']);
-                }
-            }
-            if ($arguments['height']) {
-                if (isset($svgElement->attributes()->height)) {
-                    $svgElement->attributes()->height = (int)$arguments['height'];
-                } else {
-                    $svgElement->addAttribute('height', (int)$arguments['height']);
-                }
-            }
+            // Override css class
+            $svgElement = self::setAttribute($svgElement, 'class', filter_var(trim((string)$arguments['class']), FILTER_SANITIZE_STRING));
+            $svgElement = self::setAttribute($svgElement, 'width', (int)$arguments['width']);
+            $svgElement = self::setAttribute($svgElement, 'height', (int)$arguments['height']);
 
             // remove xml version tag
             $domXml = dom_import_simplexml($svgElement);
@@ -109,6 +104,24 @@ class InlineSvgViewHelper extends AbstractViewHelper
             // thrown if file storage does not exist
             throw new \Exception($e->getMessage(), 1530601103, $e);
         }
+    }
+
+    /**
+     * @param \SimpleXMLElement $element
+     * @param string $attribute
+     * @param mixed $value
+     */
+    protected static function setAttribute(\SimpleXMLElement $element, $attribute, $value): \SimpleXMLElement
+    {
+        if ($value) {
+            if (isset($element->attributes()->$attribute)) {
+                $element->attributes()->$attribute = $value;
+            } else {
+                $element->addAttribute($attribute, $value);
+            }
+        }
+
+        return $element;
     }
 
     /**

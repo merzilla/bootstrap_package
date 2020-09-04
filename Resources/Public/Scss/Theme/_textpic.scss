@@ -26,10 +26,13 @@
     margin-bottom: $spacer;
 }
 
-
 //
 // Alignments
 //
+.textmedia-centered,
+.textpic-centered {
+    align-items: center;
+}
 .textmedia-below,
 .textpic-below {
     .textmedia-text,

@@ -215,6 +215,13 @@
                 <source>Social Media</source>
             </trans-unit>
 
+            <trans-unit id="content_element.gallery">
+                <source>Gallery</source>
+            </trans-unit>
+            <trans-unit id="content_element.gallery.description">
+                <source>Display multiple images in a rich gallery.</source>
+            </trans-unit>
+
             <trans-unit id="content_element.csv">
                 <source>CSV</source>
             </trans-unit>
@@ -361,6 +368,48 @@
             <trans-unit id="content_element.icon_group.description">
                 <source>Insert a element with several icons</source>
             </trans-unit>
+            <trans-unit id="content_element.icon_group.options">
+                <source>Options</source>
+            </trans-unit>
+            <trans-unit id="content_element.icon_group.columns">
+                <source>Columns</source>
+            </trans-unit>
+            <trans-unit id="content_element.icon_group.columns.auto">
+                <source>Automatic</source>
+            </trans-unit>
+            <trans-unit id="content_element.icon_group.align">
+                <source>Alignment</source>
+            </trans-unit>
+            <trans-unit id="content_element.icon_group.align.left">
+                <source>Left</source>
+            </trans-unit>
+            <trans-unit id="content_element.icon_group.align.center">
+                <source>Center</source>
+            </trans-unit>
+            <trans-unit id="content_element.icon_group.align.right">
+                <source>Right</source>
+            </trans-unit>
+            <trans-unit id="content_element.icon_group.icon_position">
+                <source>Icon Position</source>
+            </trans-unit>
+            <trans-unit id="content_element.icon_group.icon_position.left-top">
+                <source>Left: Top</source>
+            </trans-unit>
+            <trans-unit id="content_element.icon_group.icon_position.left-center">
+                <source>Left: Center</source>
+            </trans-unit>
+            <trans-unit id="content_element.icon_group.icon_position.right-top">
+                <source>Right: Top</source>
+            </trans-unit>
+            <trans-unit id="content_element.icon_group.icon_position.right-center">
+                <source>Right: Center</source>
+            </trans-unit>
+            <trans-unit id="content_element.icon_group.icon_position.above">
+                <source>Above</source>
+            </trans-unit>
+            <trans-unit id="content_element.icon_group.icon_position.below">
+                <source>Below</source>
+            </trans-unit>
 
             <trans-unit id="content_element.listgroup">
                 <source>List Group</source>
@@ -457,6 +506,21 @@
             <trans-unit id="carousel_item.header_class">
                 <source>Header Class</source>
             </trans-unit>
+            <trans-unit id="carousel_item.header_position">
+                <source>Header Position</source>
+            </trans-unit>
+            <trans-unit id="carousel_item.header_position.default">
+                <source>Default</source>
+            </trans-unit>
+            <trans-unit id="carousel_item.header_position.left">
+                <source>Left</source>
+            </trans-unit>
+            <trans-unit id="carousel_item.header_position.center">
+                <source>Center</source>
+            </trans-unit>
+            <trans-unit id="carousel_item.header_position.right">
+                <source>Right</source>
+            </trans-unit>
             <trans-unit id="carousel_item.subheader">
                 <source>Subheader</source>
             </trans-unit>
@@ -493,6 +557,9 @@
 
             <trans-unit id="carousel_item.item_type.header">
                 <source>Header</source>
+            </trans-unit>
+            <trans-unit id="carousel_item.item_type.text">
+                <source>Text</source>
             </trans-unit>
             <trans-unit id="carousel_item.item_type.calltoaction">
                 <source>Call to Action</source>
@@ -654,6 +721,12 @@
             <trans-unit id="icon_group_item.subheader">
                 <source>Subheader</source>
             </trans-unit>
+            <trans-unit id="icon_group_item.bodytext">
+                <source>Text</source>
+            </trans-unit>
+            <trans-unit id="icon_group_item.link">
+                <source>Link</source>
+            </trans-unit>
             <trans-unit id="icon_group_item.icon_file">
                 <source>Icon File</source>
             </trans-unit>
@@ -670,6 +743,13 @@
             </trans-unit>
             <trans-unit id="field.external_media_ratio">
                 <source>Ratio</source>
+            </trans-unit>
+
+            <trans-unit id="field.aspect_ratio">
+                <source>Aspect Ratio</source>
+            </trans-unit>
+            <trans-unit id="field.items_per_page">
+                <source>Items per page</source>
             </trans-unit>
 
             <trans-unit id="field.icon">
@@ -715,6 +795,13 @@
             </trans-unit>
             <trans-unit id="field.file_folder">
                 <source>File Folder</source>
+            </trans-unit>
+
+            <trans-unit id="field.imageorient.125">
+                <source>Beside Text, Centered Right</source>
+           </trans-unit>
+            <trans-unit id="field.imageorient.126">
+                <source>Beside Text, Centered Left</source>
             </trans-unit>
 
             <trans-unit id="option.background_image.parallax">

@@ -15,9 +15,8 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('lang')) {
 
 return [
     'ctrl' => [
-        'label' => 'date',
-        'label_alt' => 'header',
-        'label_alt_force' => true,
+        'label' => 'header',
+        'label_userFunc' => BK2K\BootstrapPackage\Userfuncs\Tca::class . '->timelineItemLabel',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
@@ -98,7 +97,7 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'foreign_table' => 'tt_content',
-                'foreign_table_where' => 'AND tt_content.pid=###CURRENT_PID### AND tt_content.CType="timeline"',
+                'foreign_table_where' => 'AND tt_content.pid=###CURRENT_PID### AND tt_content.{#CType}=\'timeline\'',
                 'maxitems' => 1,
                 'default' => 0,
             ],
@@ -192,9 +191,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
-                'dbType' => 'date',
-                'eval' => 'date,required',
-                'default' => '0000-00-00'
+                'dbType' => 'datetime',
+                'eval' => 'datetime,required'
             ],
             'l10n_mode' => 'exclude',
         ],
@@ -216,8 +214,7 @@ return [
                 'cols' => '80',
                 'rows' => '15',
                 'softref' => 'typolink_tag,images,email[subst],url',
-                'enableRichtext' => true,
-                'richtextConfiguration' => 'default'
+                'enableRichtext' => true
             ],
         ],
         'icon_file' => [
@@ -295,6 +292,7 @@ return [
                                 'showitem' => '
                                     title,
                                     alternative,
+                                    description,
                                     crop,
                                     --palette--;;filePalette
                                 '

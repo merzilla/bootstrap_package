@@ -88,8 +88,7 @@ $GLOBALS['TCA']['tt_content']['types']['texticon'] = array_replace_recursive(
             'bodytext' => [
                 'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:bodytext_formlabel',
                 'config' => [
-                    'enableRichtext' => true,
-                    'richtextConfiguration' => 'default'
+                    'enableRichtext' => true
                 ]
             ]
         ]
@@ -199,7 +198,7 @@ $GLOBALS['TCA']['tt_content']['columns'] = array_replace_recursive(
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
-                'default' => '0',
+                'default' => 'default',
                 'items' => [
                     ['LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:option.default', 'default'],
                     ['LLL:EXT:bootstrap_package/Resources/Private/Language/Backend.xlf:option.square', 'square'],

@@ -7,10 +7,7 @@
 ################
 #### HELPER ####
 ################
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Helper/ParseFunc.typoscript">
 <INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Helper/Block.typoscript">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Helper/DynamicContent.typoscript">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Helper/FrontendEditing.typoscript">
 <INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Helper/PageClass.typoscript">
 
 
@@ -18,9 +15,11 @@
 #### EXTENSIONS                                          ####
 #### Manual inclusion to keep control over loading order ####
 #############################################################
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/Form/setup.typoscript" condition="userFunc = TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::isLoaded('form')">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/FrontendLogin/setup.typoscript" condition="userFunc = TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::isLoaded('felogin')">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/IndexedSearch/setup.typoscript" condition="userFunc = TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::isLoaded('indexed_search')">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/Feedit/setup.typoscript" condition="extension.isLoaded('feedit') == 1">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/Felogin/setup.typoscript" condition="extension.isLoaded('felogin') == 1">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/Form/setup.typoscript" condition="extension.isLoaded('form') == 1">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/IndexedSearch/setup.typoscript" condition="extension.isLoaded('indexed_search') == 1">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/Seo/setup.typoscript" condition="extension.isLoaded('seo') == 1">
 
 
 ###################
@@ -29,10 +28,19 @@
 <INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Bootstrap4/setup.typoscript">
 
 
-###################################
-#### BOOSTRAP PACKAGE SETTINGS ####
-###################################
+####################################
+#### BOOTSTRAP PACKAGE SETTINGS ####
+####################################
 plugin.tx_bootstrappackage {
+    view {
+        widget {
+            TYPO3\CMS\Fluid\ViewHelpers\Widget\PaginateViewHelper {
+                templateRootPaths {
+                    0 = EXT:bootstrap_package/Resources/Private/Templates/
+                }
+            }
+        }
+    }
     settings {
         overrideParserVariables = {$plugin.bootstrap_package.settings.overrideParserVariables}
         cssSourceMapping = {$plugin.bootstrap_package.settings.cssSourceMapping}
@@ -74,7 +82,6 @@ page {
                 stdWrap {
                     typolink {
                         parameter.data = field:uid
-                        useCacheHash = 1
                         returnLast = url
                     }
                 }
@@ -84,8 +91,8 @@ page {
 
     10 = FLUIDTEMPLATE
     10 {
-        # Template names will be generated automaticly by converting the applied
-        # backend_layout, there is no explicit mapping nessesary anymore.
+        # Template names will be generated automatically by converting the applied
+        # backend_layout, there is no explicit mapping necessary anymore.
         #
         # BackendLayout Key
         # subnavigation_right_2_columns -> SubnavigationRight2Columns.html
@@ -216,6 +223,14 @@ page {
                     isTrue = {$page.theme.meta.navigationValue}
                 }
             }
+            1553883874 = BK2K\BootstrapPackage\DataProcessing\StaticFilesProcessor
+            1553883874 {
+                files {
+                    normal = {$page.logo.file}
+                    inverted = {$page.logo.fileInverted}
+                }
+                as = logo
+            }
         }
 
         ################
@@ -223,8 +238,6 @@ page {
         ################
         settings {
             logo {
-                file = {$page.logo.file}
-                fileInverted = {$page.logo.fileInverted}
                 height = {$page.logo.height}
                 width = {$page.logo.width}
                 linktitle = {$page.logo.linktitle}
@@ -241,6 +254,15 @@ page {
             siteTitle.data = TSFE:tmpl|setup|sitetitle
             rootPage = TEXT
             rootPage.data = leveluid:0
+            pagelayout = TEXT
+            pagelayout {
+                data = pagelayout
+                replacement.10 {
+                    search = pagets__
+                    replace =
+                }
+                ifEmpty = default
+            }
             logoAlt = COA
             logoAlt {
                 10 = TEXT
@@ -294,23 +316,10 @@ page {
     }
 
     meta {
-        # New notation available since TYPO3 7.4
-        # see https://forge.typo3.org/issues/67360 for more details
         viewport = {$page.meta.viewport}
         robots = {$page.meta.robots}
         apple-mobile-web-app-capable = {$page.meta.apple-mobile-web-app-capable}
-        description = {$page.meta.description}
-        description {
-            override.field = description
-        }
-        author = {$page.meta.author}
-        author {
-            override.field = author
-        }
-        keywords = {$page.meta.keywords}
-        keywords {
-            override.field = keywords
-        }
+
         X-UA-Compatible = {$page.meta.compatible}
         X-UA-Compatible {
             attribute = http-equiv
@@ -319,54 +328,10 @@ page {
         # Google
         google = {$page.meta.google}
         google-site-verification = {$page.meta.google-site-verification}
-
-        # OpenGraph Tags
-        og:title {
-            attribute = property
-            field = title
-        }
-        og:site_name {
-            attribute = property
-            data = TSFE:tmpl|setup|sitetitle
-        }
-        og:description = {$page.meta.description}
-        og:description {
-            attribute = property
-            field = description
-        }
-        og:image {
-            attribute = property
-            stdWrap.cObject = FILES
-            stdWrap.cObject {
-                references {
-                    data = levelfield:-1, media, slide
-                }
-                maxItems = 1
-                renderObj = COA
-                renderObj {
-                    10 = IMG_RESOURCE
-                    10 {
-                        file {
-                            import.data = file:current:uid
-                            treatIdAsReference = 1
-                            width = 1280c
-                            height = 720c
-                        }
-                        stdWrap {
-                            typolink {
-                                parameter.data = TSFE:lastImgResourceInfo|3
-                                returnLast = url
-                                forceAbsoluteUrl = 1
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     includeCSSLibs {
-        googlewebfont = https://fonts.googleapis.com/css?family={$page.theme.googleFont.font}:{$page.theme.googleFont.weight}
+        googlewebfont = https://fonts.googleapis.com/css?display=swap&family={$page.theme.googleFont.font}:{$page.theme.googleFont.weight}
         googlewebfont {
             external = 1
             disableCompression = 1
@@ -407,6 +372,7 @@ page {
         photoswipe_ui = EXT:bootstrap_package/Resources/Public/Contrib/photoswipe/photoswipe-ui-default.min.js
 
         #### Custom Modules
+        bootstrap_accordion = EXT:bootstrap_package/Resources/Public/JavaScript/Dist/bootstrap.accordion.min.js
         bootstrap_form = EXT:bootstrap_package/Resources/Public/JavaScript/Dist/bootstrap.form.min.js
         bootstrap_swipe = EXT:bootstrap_package/Resources/Public/JavaScript/Dist/bootstrap.swipe.min.js
         bootstrap_popover = EXT:bootstrap_package/Resources/Public/JavaScript/Dist/bootstrap.popover.min.js
@@ -493,26 +459,10 @@ page {
 }
 
 
-########################
-#### COOKIE CONSENT ####
-########################
-[globalVar = LIT:1 = {$page.theme.cookieconsent.enable}]
-    page {
-        includeJSFooterlibs {
-            contrib_cookieconsent = EXT:bootstrap_package/Resources/Public/Contrib/cookieconsent/cookieconsent.min.js
-            bootstrap_cookieconsent = EXT:bootstrap_package/Resources/Public/JavaScript/Dist/jquery.cookieconsent.min.js
-        }
-    }
-[end]
-
-
-###################################################
-#### EXCLUDE PAGE FROM EXTERNAL SEARCH RESULTS ####
-#### IF NO SEARCH IS SET FOR THIS PAGE         ####
-###################################################
-[globalVar = TSFE:page|no_search = 1]
-    page.meta.robots = noindex,follow
-[end]
+####################
+#### COMPONENTS ####
+####################
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/CookieConsent/setup.typoscript">
 
 
 ################
@@ -526,7 +476,6 @@ config {
     pageTitleSeparator.noTrimWrap = | | |
     linkVars = L(int)
     prefixLocalAnchors = {$config.prefixLocalAnchors}
-    typolinkEnableLinksAcrossDomains = {$config.typolinkEnableLinksAcrossDomains}
     doctype = html5
     removeDefaultJS = {$config.removeDefaultJS}
     admPanel = {$config.admPanel}
@@ -536,9 +485,6 @@ config {
     index_externals = 1
     index_metatags = 1
     headerComment = {$config.headerComment}
-
-    // Enable RealUrl
-    tx_realurl_enable = 1
 
     // Language Settings
     sys_language_overlay = 1

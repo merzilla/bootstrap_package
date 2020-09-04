@@ -1,10 +1,9 @@
 ############################
 ### CUSTOM SUBCATEGORIES ###
-###########################
+############################
 # customsubcategory=100=Page Template
 # customsubcategory=110=Logo
 # customsubcategory=111=Favicon
-# customsubcategory=112=Preloader
 # customsubcategory=120=Meta Settings
 # customsubcategory=150=Config
 # customsubcategory=151=Navigation
@@ -20,7 +19,6 @@
 # customsubcategory=190=Bootstrap Package Settings
 # customsubcategory=200=Extension Overrides
 # customsubcategory=201=Blocks
-# customsubcategory=230=Cookie Consent
 
 ######################
 #### DEPENDENCIES ####
@@ -44,23 +42,6 @@ page {
         alt =
         # cat=bootstrap package: logo/110/150; type=string; label=Link title: Title of the link attribute of the logo image
         linktitle =
-    }
-
-    preloader {
-        # cat=bootstrap package: preloader/112/1_enable; type=boolean; label=Preloader: Enable to display the preloader
-        enable = 1
-        logo {
-            # cat=bootstrap package: preloader/112/2_logo_file; type=string; label=Logo: Leave blank to don´t show a logo
-            file = EXT:bootstrap_package/Resources/Public/Images/BootstrapPackageInverted.svg
-            # cat=bootstrap package: preloader/112/3_logo_height; type=int+; label=Height: The image will not be resized!
-            height = 52
-            # cat=bootstrap package: preloader/112/4_logo_width; type=int+; label=Width: The image will not be resized!
-            width = 180
-        }
-        # cat=bootstrap package: preloader/112/5_background_color; type=color; label=Background Color
-        backgroundColor = #333333
-        # cat=bootstrap package: preloader/112/6_fade_duration; type=string; label=Fade duration
-        fadeDuration = 0.25
     }
 
     favicon {
@@ -111,37 +92,6 @@ page {
                 width = 16
                 # cat=bootstrap package: navigation/152/110; type=int+; label=SubNavigation Icon Width
                 height = 16
-            }
-        }
-
-        cookieconsent {
-            # cat=bootstrap package: cookie consent/230/01_enable; type=boolean; label=Enable Cookie Consent: For more information about this solution please head over to https://cookieconsent.insites.com/
-            enable = 1
-            # cat=bootstrap package: cookie consent/230/02_layout; type=options[Basic=basic, Basic Close=basic-close, Basic Header=basic-header]; label=Layout
-            layout = basic
-            # cat=bootstrap package: cookie consent/230/03_position; type=options[Banner Top=top, Banner Bottom=bottom, Floating Top Left=top-left, Floating Top Right=top-right, Floating Bottom Left=bottom-left, Floating Bottom Right=bottom-right]; label=Position: Position is used to describe where on the screen your popup should display. We also use 'position' to assume the shape of your popup. If you specify 'top' or 'bottom', we assume that a full width 'banner' is required. If however you specify a horizontal direction, we assume that a corner popup is required (which we call 'floating').
-            position = bottom
-            # cat=bootstrap package: cookie consent/230/04_static; type=boolean; label=Static Position: The popup uses position fixed to stay in one place on the screen despite any scroll bars. This option makes the popup position static so it displays at the top of the page. A height animation has also been added by default so the popup doesn’t make the page jump, but gradually grows and fades in.
-            static = 0
-            content {
-                # cat=bootstrap package: cookie consent/230/05_content_href; type=string; label=Privacy Police: Insert a full Link to the privacy police page or a page uid from your current TYPO3 System.
-                href =
-            }
-            # cat=bootstrap package: cookie consent/230/06_revokable; type=boolean; label=Revokable: If set true, revoke button is displayed every time. If false, revoke button is only displayed for advanced compliance options (opt-in and opt-out) and in countries that require revokable consent. The latter can be disabled by regionalLaw.
-            revokable = 0
-            # cat=bootstrap package: cookie consent/230/07_location; type=boolean; label=Location Detection: Location is simply a tool for getting the two letter country code that the user is in.
-            location = 0
-            law {
-                # cat=bootstrap package: cookie consent/230/08_law_countryCode; type=string; label=Country Code: Rather than getting the country code from the location services, you can hard code a particular country into the tool.
-                countryCode =
-                # cat=bootstrap package: cookie consent/230/09_law_regionalLaw; type=boolean; label=Regional Law: If false, then we only enable the popup if the country has the cookie law. We ignore all other country specific rules.
-                regionalLaw = 1
-            }
-            # cat=bootstrap package: cookie consent/230/10_type; type=options[Informal=info, Opt-In=opt-in, Opt-Out=opt-out]; label=Compliance: The informal confirmation does not require any further adjustments to your JavaScript. The Opt-In and Opt-Out options are not out-of-the-box solutions, manual adjustments to your software are necessary. For your support we provide the events bk2k.cookie.enable, bk2k.cookie.disable and bk2k.cookie.revoke. These events allow you to let your application react to them and to set or remove cookies accordingly. The cookie that contains the current status is called cookieconsent_status.
-            type = info
-            cookie {
-                # cat=bootstrap package: cookie consent/230/11_expiryDays; type=int; label=Expiry Days: The cookies expire date, specified in days (specify -1 for no expiry)
-                expiryDays = 365
             }
         }
 
@@ -222,9 +172,19 @@ page {
                     # cat=bootstrap package: social media/165/07_youtube_url; type=string; label=YouTube: Insert the full account url
                     url =
                 }
+                vk {
+                    label = VK
+                    # cat=bootstrap package: social media/165/08_vk_url; type=string; label=VK: Insert the full account url
+                    url =
+                }
                 vimeo {
                     label = Vimeo
-                    # cat=bootstrap package: social media/165/08_vimeo_url; type=string; label=Vimeo: Insert the full account url
+                    # cat=bootstrap package: social media/165/09_vimeo_url; type=string; label=Vimeo: Insert the full account url
+                    url =
+                }
+                rss {
+                    label = RSS
+                    # cat=bootstrap package: social media/165/10_rss_url; type=string; label=RSS: Insert the full url
                     url =
                 }
             }
@@ -248,14 +208,8 @@ page {
     }
 
     meta {
-        # cat=bootstrap package: meta data/120/100; type=string; label=Description: Enter a short description of the page. It will be displayed in the result lists of most search engines.
-        description =
-        # cat=bootstrap package: meta data/120/110; type=string; label=Author: Enter the page author's name.
-        author =
-        # cat=bootstrap package: meta data/120/120; type=string; label=Keywords: Enter keywords for the page separated by commas. You may also use short phrases.
-        keywords =
         # cat=bootstrap package: meta data/120/100; type=string; label=viewport
-        viewport = width=device-width, initial-scale=1
+        viewport = width=device-width, initial-scale=1, minimum-scale=1
         # cat=bootstrap package: meta data/120/110; type=string; label=robots
         robots = index,follow
         # cat=bootstrap package: meta data/120/120; type=string; label=apple-mobile-web-app-capable
@@ -264,7 +218,7 @@ page {
         compatible = IE=edge
         # cat=bootstrap package: meta data/120/140; type=string; label=google
         google = notranslate
-        # cat=bootstrap package: meta data/120/150; type=string; label=google-site-verfification
+        # cat=bootstrap package: meta data/120/150; type=string; label=google-site-verification
         google-site-verification =
     }
 
@@ -285,12 +239,12 @@ config {
     # cat=bootstrap package: config/150/120; type=options[Do not remove=0,Remove=1,Move to external file=external]; label=Remove default JavaScript
     removeDefaultJS = 0
     # cat=bootstrap package: config/150/130; type=boolean; label=Compress JavaScript
-    compressJs = 0
-    # cat=bootstrap package: config/150/140; type=boolean; label=Compress Css
-    compressCss = 0
+    compressJs = 1
+    # cat=bootstrap package: config/150/140; type=boolean; label=Compress CSS
+    compressCss = 1
     # cat=bootstrap package: config/150/150; type=boolean; label=Concatenate JavaScript
     concatenateJs = 1
-    # cat=bootstrap package: config/150/160; type=boolean; label=Concatenate Css
+    # cat=bootstrap package: config/150/160; type=boolean; label=Concatenate CSS
     concatenateCss = 1
     # cat=bootstrap package: config/150/170; type=boolean; label=Admin Panel
     admPanel = 1
@@ -300,8 +254,6 @@ config {
     headerComment = Based on the TYPO3 Bootstrap Package by Benjamin Kott - https://www.bootstrap-package.com/
     # cat=bootstrap package: config/150/210; type=boolean; label=Send cache headers: Allow appropriate caching by transparent proxies and browser clients
     sendCacheHeaders = 1
-    # cat=bootstrap package: config/150/220; type=boolean; label=Enable links accross domains: This option enables to create links across domains using current domain's linking scheme.
-    typolinkEnableLinksAcrossDomains = 0
 }
 
 #########################
@@ -311,7 +263,7 @@ plugin.bootstrap_package {
     settings {
         # cat=bootstrap package: css parser/190/100; type=boolean; label=Override Parser Variables: If enabled the variables defined in your LESS/Scss files will be overridden with the ones defined as TypoScript Constants.
         overrideParserVariables = 1
-        # cat=bootstrap package: css parser/190/110; type=boolean; label=CSS source mapping: Create a CSS source map useful to debug Less in browser developer tools. Note: CSS compression will be disabled.
+        # cat=bootstrap package: css parser/190/110; type=boolean; label=CSS source mapping: Create a CSS source map useful to debug LESS/Scss in browser developer tools. Note: CSS compression will be disabled.
         cssSourceMapping = 0
     }
 }
@@ -344,13 +296,20 @@ plugin.bootstrap_package {
     }
 }
 
+####################
+#### COMPONENTS ####
+####################
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/CookieConsent/constants.typoscript">
+
 #############################################################
 #### EXTENSIONS                                          ####
 #### Manual inclusion to keep control over loading order ####
 #############################################################
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/Form/constants.typoscript" condition="userFunc = TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::isLoaded('form')">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/FrontendLogin/constants.typoscript" condition="userFunc = TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::isLoaded('felogin')">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/IndexedSearch/constants.typoscript" condition="userFunc = TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility::isLoaded('indexed_search')">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/Feedit/constants.typoscript" condition="extension.isLoaded('feedit') == 1">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/Felogin/constants.typoscript" condition="extension.isLoaded('felogin') == 1">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/Form/constants.typoscript" condition="extension.isLoaded('form') == 1">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/IndexedSearch/constants.typoscript" condition="extension.isLoaded('indexed_search') == 1">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:bootstrap_package/Configuration/TypoScript/Extension/Seo/constants.typoscript" condition="extension.isLoaded('seo') == 1">
 
 ###################
 #### FRAMEWORK ####

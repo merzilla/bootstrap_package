@@ -8,7 +8,7 @@ Bootstrap Package
 Bootstrap Package delivers a fully configured frontend
 theme for TYPO3, based on the Bootstrap CSS Framework.
 
-The goal of this package is to give an advanced example of how modern templating
+The goal of this package is also to give an advanced example of how modern templating
 in TYPO3 CMS can be handled nicely without depending on third party extensions.
 Bootstrap Package comes with a fully configurable Frontend via TypoScript. This
 includes the TypoScript Constant Editor.
@@ -16,7 +16,9 @@ includes the TypoScript Constant Editor.
 Minimal Dependencies
 ====================
 
-* TYPO3 CMS 8.7 or greater
+* TYPO3 CMS 9.5 or 10.4 for Bootstrap Package 11.x
+* TYPO3 CMS 8.7 or 9.5 for Bootstrap Package 10.x, 9.x and 8.x
+* TYPO3 CMS 7.6 for Bootstrap Package 7.x
 
 Quick Install Guide
 ===================
@@ -85,18 +87,35 @@ Recommended Apache Modules
 Usage
 =====
 
+Documentation
+-------------
+
+* `Wiki <https://github.com/benjaminkott/bootstrap_package/wiki>`_
+* `Documentation <https://docs.typo3.org/p/bk2k/bootstrap-package/master/en-us/>`_
+
 Contributing
 ------------
 
 Feel free to fork this project and create a pull request when you're happy
-with your changes.
-
-We check the source code according to the TYPO3 Coding Guidelines. To reformat
-the code automatically, you can use `php-cs-fixer` as follows:
+with your changes. We check the source code according to the our Coding Guidelines.
+To reformat the code automatically, you can use ``php-cs-fixer`` as follows:
 
 .. code-block::
 
-   php-cs-fixer fix
+   composer cgl
+
+DDEV Local
+----------
+
+The extension comes with a ready to use DDEV Local configuration. Type
+``ddev start`` in the extension root folder to start the Docker container.
+
+``ddev launch`` will open the browser and head to the testing website. You can
+use ``ddev launch typo3`` to get directly to the backend.
+
+To run the build process simply execute ``ddev yarn install`` followed by the
+desired command e.g. ``ddev yarn build``. Type ``ddev yarn help`` or
+``ddev yarn -help`` to get an overview of the available commands.
 
 Bug reporting
 -------------
@@ -114,7 +133,7 @@ Test the Bootstrap Package
 ==========================
 
 If you are interested in the Bootstrap Package you can test it in our
-`Vagrant Box <https://github.com/benjaminkott/bootstrap_package_box>`_.
+`Introduction <https://github.com/benjaminkott/site-introduction>`_ Demo Setup.
 
 Contact & Communication
 =======================
@@ -125,7 +144,7 @@ Slack
 You can connect directly with us on `Slack <https://typo3.slack.com/messages/bootstrap-package/>`_, the
 preferred instant communication platform of TYPO3 CMS developers. If you already have access to the
 TYPO3 Slack platform join the #bootstrap-package channel. If you don't have access yet, you can
-register `here <https://forger.typo3.org/slack>`_.
+register `here <https://my.typo3.org/about-mytypo3org/slack>`_.
 
 Twitter
 -------
@@ -135,6 +154,11 @@ Send a tweet `@benjaminkott <https://twitter.com/benjaminkott>`_.
 
 Code Quality
 ============
+
+.. image:: https://github.com/benjaminkott/bootstrap_package/workflows/CI/badge.svg
+   :alt: Continuous Integration Status
+   :target: https://github.com/benjaminkott/bootstrap_package/actions?query=workflow%3ACI
+
 .. image:: https://travis-ci.org/benjaminkott/bootstrap_package.svg?branch=master
    :alt: Build Status
    :target: https://travis-ci.org/benjaminkott/bootstrap_package

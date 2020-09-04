@@ -20,7 +20,9 @@ class ImageVariantsUtility
      */
     protected static $allowedVariantProperties = [
         'breakpoint',
-        'width'
+        'width',
+        'aspectRatio',
+        'sizes',
     ];
 
     /**
@@ -53,16 +55,67 @@ class ImageVariantsUtility
      * @param array $multiplier
      * @param array $gutters
      * @param array $corrections
+     * @param float $aspectRatio
      * @return array
      */
-    public static function getImageVariants($variants = [], $multiplier = [], $gutters = [], $corrections = []): array
+    public static function getImageVariants($variants = [], $multiplier = [], $gutters = [], $corrections = [], $aspectRatio = null): array
     {
         $variants = self::processVariants($variants);
+        $variants = self::processResolutions($variants);
         $variants = self::addGutters($variants, $gutters);
         $variants = self::processMultiplier($variants, $multiplier);
         $variants = self::removeGutters($variants, $gutters);
         $variants = self::processCorrections($variants, $corrections);
+        $variants = self::processAspectRatio($variants, $aspectRatio);
         return $variants;
+    }
+
+    /**
+     * @param array $variants
+     * @return array
+     */
+    protected static function processResolutions($variants): array
+    {
+        foreach ($variants as $variant => $properties) {
+            if (!array_key_exists('sizes', $properties)) {
+                $properties['sizes'] = [];
+            }
+            $properties['sizes'] = self::processSizes($properties['sizes']);
+            $variants[$variant] = $properties;
+        }
+        return $variants;
+    }
+
+    /**
+     * @param array $sizes
+     * @return array
+     */
+    protected static function processSizes($sizes): array
+    {
+        $resultSizes = [];
+        $workingSizes = [];
+        foreach ($sizes as $key => $settings) {
+            if (!array_key_exists('multiplier', $settings) ||
+                !is_numeric($settings['multiplier']) ||
+                $settings['multiplier'] < 1 ||
+                !self::isValidSizeKey($key)
+            ) {
+                continue;
+            }
+            $workingSizes[substr($key, 0, -1) . ''] = [
+                'multiplier' => 1 * $settings['multiplier'],
+            ];
+        }
+
+        if (!array_key_exists(1, $workingSizes)) {
+            $workingSizes[(float) 1 . ''] = ['multiplier' => 1];
+        }
+        ksort($workingSizes);
+        foreach ($workingSizes as $workingKey => $workingSettings) {
+            $resultSizes[$workingKey . 'x'] = $workingSettings;
+        }
+
+        return $resultSizes;
     }
 
     /**
@@ -73,22 +126,30 @@ class ImageVariantsUtility
     {
         $variants = is_array($variants) && !empty($variants) ? $variants : self::$defaultVariants;
         foreach ($variants as $variant => $properties) {
-            if (is_array($properties)) {
-                foreach ($properties as $key => $value) {
-                    if ($value === 'unset' || !in_array($key, self::$allowedVariantProperties, true)) {
-                        unset($variants[$variant][$key]);
-                        continue;
-                    }
+            if (!is_array($properties)) {
+                unset($variants[$variant]);
+                continue;
+            }
+            foreach ($properties as $key => $value) {
+                if (!in_array($key, self::$allowedVariantProperties, true)) {
+                    unset($variants[$variant][$key]);
+                    continue;
+                }
+                if ($key === 'sizes') {
+                    continue;
+                } elseif ($key === 'aspectRatio') {
                     if (is_numeric($value) && $value > 0) {
-                        $variants[$variant][$key] = (int) $value;
+                        $variants[$variant][$key] = (float) $value;
                     } else {
                         unset($variants[$variant][$key]);
                     }
+                } elseif (is_numeric($value) && $value > 0) {
+                    $variants[$variant][$key] = (int) $value;
+                } else {
+                    unset($variants[$variant][$key]);
                 }
-                if (empty($variants[$variant]) || !isset($variants[$variant]['width'])) {
-                    unset($variants[$variant]);
-                }
-            } else {
+            }
+            if (empty($variants[$variant]) || !isset($variants[$variant]['width'])) {
                 unset($variants[$variant]);
             }
         }
@@ -157,5 +218,35 @@ class ImageVariantsUtility
             }
         }
         return $variants;
+    }
+
+    /**
+     * @param array $variants
+     * @param float $aspectRatio
+     * @return array
+     */
+    protected static function processAspectRatio($variants, $aspectRatio): array
+    {
+        if (is_numeric($aspectRatio) && $aspectRatio > 0) {
+            foreach ($variants as $variant => $value) {
+                $variants[$variant]['aspectRatio'] = (float) $aspectRatio;
+            }
+        }
+        return $variants;
+    }
+
+    /**
+     * @param mixed $key
+     * @return bool
+     */
+    public static function isValidSizeKey($key): bool
+    {
+        return !(
+            !is_string($key) ||
+            substr($key, -1, 1) !== 'x' ||
+            !is_numeric(substr($key, 0, -1)) ||
+            (float) substr($key, 0, -1) < 1 ||
+            (float) substr($key, 0, -1) !== round((float) substr($key, 0, -1), 1)
+        );
     }
 }

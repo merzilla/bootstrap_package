@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     /**
      * Grunt correct scss urls
      */
-    grunt.registerMultiTask('rebase', 'Grunt task zo rebase urls after sass processing', function () {
+    grunt.registerMultiTask('rebase', 'Grunt task to rebase urls after sass processing', function () {
         var options = this.options(),
             done = this.async(),
             postcss = require('postcss'),
@@ -79,6 +79,14 @@ module.exports = function(grunt) {
             js: '<%= paths.resources %>Public/JavaScript/',
             contrib: '<%= paths.resources %>Public/Contrib/'
         },
+        stylelint: {
+            options: {
+                configFile: '<%= paths.root %>.stylelintrc',
+                fix: true,
+            },
+            sass: ['<%= paths.sass %>**/*.scss'],
+            less: ['<%= paths.less %>**/*.less'],
+        },
         rebase: {
             bootstrap4: {
                 options: {
@@ -118,9 +126,6 @@ module.exports = function(grunt) {
         },
         uglify: {
             options: {
-                compress: {
-                    warnings: false
-                },
                 output: {
                     comments: false
                 }
@@ -128,6 +133,10 @@ module.exports = function(grunt) {
             modernizr: {
                 src: '<%= paths.contrib %>modernizr/modernizr.min.js',
                 dest: '<%= paths.contrib %>modernizr/modernizr.min.js'
+            },
+            bootstrapAccordion: {
+                src: '<%= paths.js %>Src/bootstrap.accordion.js',
+                dest: '<%= paths.js %>Dist/bootstrap.accordion.min.js'
             },
             bootstrapForm: {
                 src: '<%= paths.js %>Src/bootstrap.form.js',
@@ -158,8 +167,8 @@ module.exports = function(grunt) {
                 dest: '<%= paths.js %>Dist/bootstrap.stickyheader.min.js'
             },
             cookieconsent: {
-                src: '<%= paths.js %>Src/jquery.cookieconsent.js',
-                dest: '<%= paths.js %>Dist/jquery.cookieconsent.min.js'
+                src: '<%= paths.js %>Src/bootstrap.cookieconsent.js',
+                dest: '<%= paths.js %>Dist/bootstrap.cookieconsent.min.js'
             },
             ckeditor_address: {
                 src: '<%= paths.resources %>Public/CKEditor/Plugins/Address/plugin.js',
@@ -261,7 +270,7 @@ module.exports = function(grunt) {
                 tasks: 'uglify:bootstrapStickyheader'
             },
             cookieconsent: {
-                files: '<%= paths.js %>Src/jquery.cookieconsent.js',
+                files: '<%= paths.js %>Src/bootstrap.cookieconsent.js',
                 tasks: 'uglify:cookieconsent'
             },
             ckeditor_address: {
@@ -295,11 +304,31 @@ module.exports = function(grunt) {
         },
         imagemin: {
             images: {
+                options: {
+                    svgoPlugins: [{
+                        removeViewBox: false
+                    }]
+                },
                 files: [
                     {
                         cwd: '<%= paths.images %>',
-                        src: ['**/*.{png,jpg,gif}'],
+                        src: ['**/*.{png,jpg,gif,svg}'],
                         dest: '<%= paths.images %>',
+                        expand: true
+                    }
+                ]
+            },
+            icons: {
+                options: {
+                    svgoPlugins: [{
+                        removeViewBox: false
+                    }]
+                },
+                files: [
+                    {
+                        cwd: '<%= paths.icons %>',
+                        src: ['**/*.{png,jpg,gif,svg}'],
+                        dest: '<%= paths.icons %>',
                         expand: true
                     }
                 ]
@@ -474,6 +503,7 @@ module.exports = function(grunt) {
                     engine: 'node',
                     autoHint: false,
                     htmlDemo: false,
+                    codepointsFile: "bootstrappackageicon.json",
                     templateOptions: {
                         baseClass: 'bootstrappackageicon',
                         classPrefix: 'bootstrappackageicon-'
@@ -493,6 +523,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-sass');
+    grunt.loadNpmTasks('grunt-stylelint');
     grunt.loadNpmTasks('grunt-webfont');
 
     /**
@@ -503,7 +534,8 @@ module.exports = function(grunt) {
     grunt.registerTask('css', ['sass', 'less', 'rebase', 'cssmin']);
     grunt.registerTask('js', ['uglify', 'removesourcemap']);
     grunt.registerTask('image', ['imagemin']);
-    grunt.registerTask('build', ['webfont', 'update', 'css', 'js', 'image']);
+    grunt.registerTask('lint', ['stylelint']);
+    grunt.registerTask('build', ['update', 'lint', 'webfont', 'css', 'js', 'image']);
     grunt.registerTask('default', ['build']);
 
 };
