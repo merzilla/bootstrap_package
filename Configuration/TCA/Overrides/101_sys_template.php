@@ -7,7 +7,7 @@
  * LICENSE file that was distributed with this source code.
  */
 
-defined('TYPO3_MODE') || die();
+defined('TYPO3') or die('Access denied.');
 
 /***************
  * TypoScript: Full Package
@@ -27,16 +27,6 @@ defined('TYPO3_MODE') || die();
     'bootstrap_package',
     'Configuration/TypoScript/ContentElement',
     'Bootstrap Package: Content Elements'
-);
-
-/***************
- * TypoScript: Framework
- * Include Bootstrap 3.x (LESS) Assets
- */
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
-    'bootstrap_package',
-    'Configuration/TypoScript/Bootstrap3',
-    'Bootstrap Package: Bootstrap 3.x (LESS)'
 );
 
 /***************

@@ -7,27 +7,21 @@
  * LICENSE file that was distributed with this source code.
  */
 
-defined('TYPO3_MODE') || die();
+defined('TYPO3') or die('Access denied.');
 
-/***************
- * Add Content Element
- */
+// Add Content Element
 if (!is_array($GLOBALS['TCA']['tt_content']['types']['audio'])) {
     $GLOBALS['TCA']['tt_content']['types']['audio'] = [];
 }
 
-/***************
- * Add content element PageTSConfig
- */
+// Add content element PageTSConfig
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerPageTSConfigFile(
-    $extensionKey,
+    'bootstrap_package',
     'Configuration/TsConfig/Page/ContentElement/Element/Audio.tsconfig',
     'Bootstrap Package Content Element: Audio'
 );
 
-/***************
- * Add content element to selector list
- */
+// Add content element to selector list
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
     'tt_content',
     'CType',
@@ -40,14 +34,10 @@ if (!is_array($GLOBALS['TCA']['tt_content']['types']['audio'])) {
     'after'
 );
 
-/***************
- * Assign Icon
- */
+// Assign Icon
 $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes']['audio'] = 'content-audio';
 
-/***************
- * Configure element type
- */
+// Configure element type
 $GLOBALS['TCA']['tt_content']['types']['audio'] = array_replace_recursive(
     $GLOBALS['TCA']['tt_content']['types']['audio'],
     [

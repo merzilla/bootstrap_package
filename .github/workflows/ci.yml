@@ -1,63 +1,131 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches-ignore:
+      - 'task/**'
+      - 'bugfix/**'
+      - 'feature/**'
+  pull_request:
 
 jobs:
+
   build-php:
     name: Build PHP
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       max-parallel: 4
       matrix:
-        typo3: ['^9', '^10']
-        php: ['7.2', '7.3', '7.4']
+        typo3: ['^10', '^11']
+        php: ['7.2', '7.3', '7.4', '8.0']
+        mysql: ['5.7']
+        exclude:
+          - typo3: '^10'
+            php: '8.0'
+          - typo3: '^11'
+            php: '7.2'
+          - typo3: '^11'
+            php: '7.3'
     steps:
-    - name: Start Database-Server
-      run: |
-        sudo /etc/init.d/mysql start
-    - name: Checkout Code
-      uses: actions/checkout@v2
-    - name: Set up PHP Version
-      uses: shivammathur/setup-php@v1
-      with:
-        php-version: ${{ matrix.php }}
-    - name: Install
-      run: |
-        composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
-        git checkout composer.json
-    - name: Lint
-      run: |
-        composer test:php:lint
-    - name: CGL
-      run: |
-        composer cgl
-    - name: Unit Tests
-      run: |
-        composer test:php:unit
-    - name: Functional Tests
-      run: |
-        composer test:php:functional
-      env:
-        COMPOSER_PROCESS_TIMEOUT: 1200
-        typo3DatabaseHost: 127.0.0.1
-        typo3DatabaseName: t3func
-        typo3DatabasePassword: root
-        typo3DatabaseUsername: root
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Set up MySQL ${{ matrix.mysql }}
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: ${{ matrix.mysql }}
+          mysql root password: 'root'
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+      - name: Install
+        run: |
+          composer require typo3/cms-core:${{ matrix.typo3 }} --no-progress
+          git checkout composer.json
+      - name: Lint
+        run: |
+          composer test:php:lint
+      - name: CGL
+        run: |
+          composer cgl
+      - name: PHPStan
+        run: |
+          composer phpstan -- --error-format=github
+      - name: Unit Tests
+        run: |
+          composer test:php:unit
+      - name: Functional Tests
+        run: |
+          composer test:php:functional
+        env:
+          COMPOSER_PROCESS_TIMEOUT: 1200
+          typo3DatabaseHost: 127.0.0.1
+          typo3DatabaseName: t3func
+          typo3DatabasePassword: root
+          typo3DatabaseUsername: root
 
   build-frontend:
     name: Build Frontend
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup node
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - name: Install
-      run: |
-        cd Build
-        yarn install
-    - name: Build
-      run: |
-        cd Build
-        yarn build
+      - uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12.x'
+      - name: Install
+        run: |
+          cd Build
+          yarn install
+      - name: Build
+        run: |
+          cd Build
+          yarn build
+      - name: Status
+        continue-on-error: true
+        run: |
+          git status
+          git status | grep -q "nothing to commit, working tree clean"
+
+  deployment:
+    name: Deployment
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://bootstrap-package.com
+    needs: [build-php, build-frontend]
+    if: (github.ref == 'refs/heads/master') && github.event_name != 'pull_request' && (github.repository == 'benjaminkott/bootstrap_package')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up PHP Version 7.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          tools: composer:v2
+      - name: Download Deployer
+        run: |
+          curl -LO https://deployer.org/deployer.phar;
+          sudo mv deployer.phar /usr/local/bin/dep;
+          sudo chmod +x /usr/local/bin/dep;
+          dep self-update;
+      - name: Setup SSH Key
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh-auth.sock
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_rsa
+          chmod 0600 ~/.ssh/deploy_rsa
+          ssh-keygen -p -P "${{ secrets.SSH_PASSPHRASE }}" -N "" -f ~/.ssh/deploy_rsa
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add ~/.ssh/deploy_rsa
+          ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Deploy
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_AUTH_SOCK: /tmp/ssh-auth.sock
+        run: |
+          dep --file="./Build/deploy.php" deploy;
